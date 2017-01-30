@@ -359,7 +359,6 @@ function ConvertToCSV(objArray) {
         window.onload = function() {newTrial()};
                 function newTrial()
             {
-                trial_nr++;
                 document.getElementById("claimfrm-1").reset();
                 inFocus = 'item';
                 tabFocus = 'Claimform-1';
@@ -385,6 +384,7 @@ function ConvertToCSV(objArray) {
                 {
                     alert('You have reached the end of the experiment.');
                 }
+                trial_nr++;
             }
 
 </script>
