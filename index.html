@@ -11,7 +11,8 @@
             var user = guid();
             //looks which textbox in claim form tab is currently in focus. If it starts a new trial, it's set to Item, the first item in the form.
             var inFocus = false;
-            var conditions = [{item: 'low', amount: 'low', pcode: 'low', accountnr: 'low'}, {item: 'low', amount: 'low', pcode: 'high', accountnr: 'high'}];
+            var conditions = [{item: 'low', amount: 'low', pcode: 'low', accountnr: 'low'}, {item: 'low', amount: 'low', pcode: 'high', accountnr: 'high'}, {item: 'low', amount: 'high', pcode: 'low', accountnr: 'high'}, {item: 'high', amount: 'high', pcode: 'low', accountnr: 'low'}];
+            var currCondition = conditions[conditionCount];
             //looks which tab is currently open. If it starts a new trial, it's set to the claim form.
             var tabFocus = 'Claimform-1';
             var claim, tgt_claimnr, tgt_item, tgt_amount, tgt_accountnr; 
@@ -173,7 +174,7 @@ $(document).keyup(function(evt) {
                     participant: user,
                     phase: 'training',
                     trialNo: trial_nr,
-                    iac: 'low',
+                    iac: currCondition[inFocus],
                     evttype: 'entry',
                     datatype: inFocus,
                     target: claim[inFocus],
@@ -259,11 +260,12 @@ function openCity(evt, cityName, id) {
     if (cityName != tabFocus)
         {
             endVisit = Date.now();
+            tabFocus = tabFocus.toLowerCase();
             keyData.push({
                     participant: user,
                     phase: 'training',
                     trialNo: trial_nr,
-                    iac: 'low',
+                    iac: currCondition[tabFocus],
                     evttype: 'visit',
                     datatype: tabFocus,
                     target: '',
@@ -346,7 +348,7 @@ document.getElementById("defaultOpen").click();
                         participant: user,
                         phase: 'training',
                         trialNo: trial_nr,
-                        iac: 'low',
+                        iac: currCondition[values[i]],
                         datatype: values[i],
                         target: claim[values[i]],
                         output: document.forms["claimfrm-1"][values[i]].value,
@@ -422,7 +424,7 @@ function ConvertToCSV(objArray) {
                     if ( (trial_nr  % 2) == 0)
                         {
                             conditionCount += 1;
-                            var currCondition = conditions[conditionCount];
+                            currCondition = conditions[conditionCount];
                             for (var property in currCondition)
                                 {
                                     if(currCondition.hasOwnProperty(property))

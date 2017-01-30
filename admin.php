@@ -21,7 +21,8 @@
                 if(isset($_POST['password'])){
                     if($_POST['password'] == 'delete'){
                         file_put_contents('master.csv','"ParticipantID", "Phase", "TrialNo", "IAC", "EventType", "DataType", "Target",  "CharTyped", "CurrOutput", "StartTime", "EndTime", "TimeTaken"'.PHP_EOL);
-                        echo "Master spreadsheet has been reset.";     
+                        file_put_contents('errors.csv','"ParticipantID", "Phase", "TrialNo", "IAC", "DataType", "Target",  "Output", "StartTime", "EndTime", "TimeTaken", "Correct"'.PHP_EOL);
+                        echo "Master and error spreadsheets have been reset.";     
                     }
                     else{
                         echo "That's not the password.";
@@ -33,4 +34,5 @@
     </div>
 </body>
 
+   
 </html>
