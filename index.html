@@ -1,0 +1,395 @@
+<html>
+    <head>
+    <link href="style.css" rel="StyleSheet" type="text/css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="claimdata.js"></script>
+        <script>
+            
+            var trial_nr = 0;
+            var nr_trials = 6;
+            var user = guid();
+            //looks which textbox in claim form tab is currently in focus. If it starts a new trial, it's set to Item, the first item in the form.
+            var inFocus = false;
+            //looks which tab is currently open. If it starts a new trial, it's set to the claim form.
+            var tabFocus = 'Claimform-1';
+            var claim, tgt_claimnr, tgt_item, tgt_amount, tgt_accountnr; 
+            var errorData = [];
+            claim = claimData[trial_nr];
+            var startTrial = Date.now();
+            var startVisit = Date.now(); 
+            var startKey = Date.now();
+            var endTrial, endVisit, endKey;
+            //$('<tr><td>10</td><td>printing</td></tr>').appendTo('#itemtbl');
+            
+            //document.getElementById("claimnr").value = trial_nr;
+            //claim = [{claimnr: '10', item: 'printing', amount: '21.12', pcode: 'ACD351', accountnr: '354674'}, {claimnr: '12', item: 'coffee', amount: '23.87', pcode: 'ERF641', accountnr: '876251'}];
+            //$('#itemtbl tr').not(':first').remove();
+                    //var html = '';
+                    //for(var i = 0; i < 1; i++)
+                    //{html += '<tr><td>' + claim[i]['claimnr'] + '</td><td>' + claim[i]['item'] + '</td></tr>';}
+                    // $("<tr><td>10</td><td>printing</td></tr>").appendTo("#itemtbl");
+                    //$('#itemtbl tr').first().after(html);
+
+            
+        //CREATES USER ID.
+        function guid() {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            }
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                s4() + '-' + s4() + s4() + s4();
+        }
+        </script>
+    </head>
+<body>
+    
+    
+<ul class="tab">
+  <li><a href="javascript:void(0)" class="tablinks low" onclick="openCity(event, 'Claimform-1')" id="defaultOpen">Claim form</a></li>
+<!--  <li><a href="javascript:void(0)" class="tablinks" onclick="openCity(event, 'Claimform-2')">Claim form</a></li> -->
+  <li><a href="javascript:void(0)" class="tablinks low" onclick="openCity(event, 'Item')">Item</a></li>
+  <li><a href="javascript:void(0)" class="tablinks low" onclick="openCity(event, 'Amount')">Amount</a></li>
+  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Pcode\')', 2000);">Project code</a></li>
+  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Accountnr\')', 2000);">Account number</a></li>
+</ul>
+
+<div id="Claimform-1" class="tabcontent">
+    <h3>Claim form</h3>
+    <form name='claimfrm-1' id='claimfrm-1' onsubmit="validateForm(event)">
+        <label>Claim number</label><input type="text" name="claimnr_form" id='claimnr_form' autocomplete="off" value='1' disabled="disabled" />
+        <label>Item</label><input type="text" name="item" id='item' autocomplete="off">
+        <label>Amount</label><input type="text" name="amount" id='amount' autocomplete="off">
+        <label>Project code</label><input type="text" name="pcode" id='pcode' autocomplete="off">
+        <label>Account number</label><input type="text" name="accountnr" id='accountnr' autocomplete="off">
+        <input type="submit">
+    </form>
+</div>
+    
+    <!--  <div id="Claimform-2" class="tabcontent">
+    <h3>Claim form</h3>
+    <form id='claimfrm-2' onsubmit="sendData(event)">
+        <label>Claim number</label><input type="text" name="claimnr" autocomplete="off" value="12" disabled="disabled" />
+        <label>Item</label><input type="text" name="item" autocomplete="off">
+        <label>Amount</label><input type="text" name="amount" autocomplete="off">
+        <label>Project code</label><input type="text" name="pcode" autocomplete="off">
+        <label>Account number</label><input type="text" name="accountnr" autocomplete="off">
+        <input type="submit">
+    </form>
+</div> -->
+
+<div id="Item" class="tabcontent low">
+  <h3>Item</h3>
+    
+    <table id='itemtbl'>
+    <tr>
+        <td>Claim number</td>
+        <td>Item</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+     <tr>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+</div>
+
+<div id="Amount" class="tabcontent low">
+  <h3>Amount</h3>
+
+        <table id='amounttbl'>
+    <tr>
+        <td data-text="Claim number"></td>
+        <td>Amount</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>21.12</td>
+    </tr>
+     <tr>
+        <td>12</td>
+        <td>02.81</td>
+    </tr>
+</table>
+    
+</div>
+    
+<div id="Pcode" class="tabcontent high">
+    <h3>Project code</h3>
+    <table id='pcodetbl'>
+    <tr>
+        <td>Claim number</td>
+        <td>Project code</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>ACD351</td>
+    </tr>
+     <tr>
+        <td>12</td>
+        <td>ERF642</td>
+    </tr>
+    </table> 
+</div>
+    
+<div id="Accountnr" class="tabcontent high">
+  <h3>Account number</h3>
+        <table id='accounttbl'>
+    <tr>
+        <td>Claim number</td>
+        <td>Account number</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>876351</td>
+    </tr>
+     <tr>
+        <td>12</td>
+        <td>987642</td>
+    </tr>
+</table>  
+</div>
+    
+<script>    
+var keyData = [];
+
+$('input').focus(function() {
+   inFocus = $(this).attr('id');
+});
+    
+//listens to key presses being made.
+$(document).keyup(function(evt) {
+                endKey = Date.now();
+                    keyData.push({
+                    participant: user,
+                    phase: 'training',
+                    trialNo: trial_nr,
+                    iac: 'low',
+                    evttype: 'entry',
+                    datatype: inFocus,
+                    target: claim[inFocus],
+                    chartyped:String.fromCharCode(evt.keyCode),
+                    curroutput: document.getElementById(inFocus).value,
+                    startTime: startKey,
+                    endTime: endKey,
+                    timeTaken: endKey - startKey,
+                    })
+                startKey = Date.now();
+});
+    
+    
+    //listens to tab clicks.
+function openCity(evt, cityName) {
+
+     var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    
+    document.getElementById(cityName).style.display = "block";
+    //evt.currentTarget.className += " active";
+    
+    if(cityName=='Claimform-1')
+        {
+            setFocusToTextBox(inFocus);
+        }
+
+    if (cityName != tabFocus)
+        {
+            endVisit = Date.now();
+            keyData.push({
+                    participant: user,
+                    phase: 'training',
+                    trialNo: trial_nr,
+                    iac: 'low',
+                    evttype: 'visit',
+                    datatype: tabFocus,
+                    target: '',
+                    charrtyped:'',
+                    curroutput: '',
+                    startTime: startVisit,
+                    endTime: endVisit,
+                    timeTaken: endVisit - startVisit,
+                    })
+            tabFocus = cityName;
+            startVisit = Date.now();
+        }
+
+}
+    
+    
+    // Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+    
+    //keep the selected textbox when switching tabs.
+    function setFocusToTextBox(inFocus){
+        if(inFocus == false)
+            {
+                document.getElementById("item").focus();
+            }
+    else{
+        document.getElementById(inFocus).focus();
+    }
+}
+    
+    function getPos(){
+        if(inFocus == 'item'){datapos = 1};
+        if(inFocus == 'amount'){datapos = 2};
+        if(inFocus == 'accountnr'){datapos = 3};
+        return datapos;
+    }
+    //prevents user from copy pasting content into textbox.
+    $(document).ready(function(){
+  $('input').bind("paste",function(e) {
+      e.preventDefault();
+  });
+});
+    
+    //prevents user from using Crtl+F to find things on page.
+    window.addEventListener("keydown",function (e) {
+    if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
+        e.preventDefault();
+    }
+})
+    
+    //Check form for errors and send to errors.csv file.
+    function validateForm(event)
+    {
+        event.preventDefault();
+        claim = claimData[trial_nr];
+        var values = ['item', 'amount', 'pcode', 'accountnr'];
+        endTrial = Date.now();
+        for (i = 0; i < values.length; i++) 
+	   {
+           var output = document.forms["claimfrm-1"][values[i]].value;
+           var target = claim[values[i]];
+            if (typeof target != 'number')
+            {
+            output = output.toLowerCase();   
+            target = target.toLowerCase();   
+            }
+           
+            console.log(output);
+           //if the entered output does not match the target, var error will be set to 1.
+            if (output != target)
+            {
+                error = 1;
+            }
+            else
+            {
+                error = 0;
+            }
+
+            errorData.push({
+                        participant: user,
+                        phase: 'training',
+                        trialNo: trial_nr,
+                        iac: 'low',
+                        datatype: values[i],
+                        target: claim[values[i]],
+                        output: document.forms["claimfrm-1"][values[i]].value,
+                        startTrial: startTrial,
+                        endTrial: endTrial,
+                        timeTaken: endTrial - startTrial,
+                        correct: error,
+                        })
+       }
+        
+        var jsonObject = JSON.stringify(errorData);
+        
+        var csv = '"ParticipantID", "Phase", "TrialNo", "IAC", "DataType", "Target", "Output", "StartTime","EndTime", "TimeTaken", "Correct",\n';
+        csv += ConvertToCSV(jsonObject);
+        
+       //Send the data using post.
+        var posting = $.post('finish-errors.php',{data : jsonObject});
+    
+        sendData(event);
+        console.log( 'Error data saved' );
+    //posting.done(function( data ) {});
+                 
+    }
+                 
+//Sends collected key and visit data to masters.csv file.
+function sendData(event) {
+    event.preventDefault();
+    
+    var jsonObject = JSON.stringify(keyData);
+
+    var csv = '"ParticipantID", "Phase", "TrialNo", "IAC", "EventType", "DataType", "Target",  "CharTyped", "CurrOutput", "StartTime","EndTime", "TimeTaken", \n';
+    csv += ConvertToCSV(jsonObject);
+
+    //Send the data using post.
+    var posting = $.post('finish.php',{data : jsonObject});
+    
+    newTrial();
+    console.log( 'Keylogging data saved' );
+   // posting.done(function( data ) { });
+}
+
+//Converts JSON object to CSV file.
+function ConvertToCSV(objArray) {
+            var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+            var str = '';
+
+            for (var i = 0; i < array.length; i++) {
+                var line = '';
+            for (var index in array[i]) {
+                if (line != '') line += ','
+
+                line += array[i][index];
+            }
+
+            str += line + '\r\n';
+        }
+
+        return str;
+    }
+
+
+        window.onload = function() {newTrial()};
+                function newTrial()
+            {
+                trial_nr++;
+                document.getElementById("claimfrm-1").reset();
+                inFocus = 'item';
+                tabFocus = 'Claimform-1';
+                startTrial = Date.now();
+                startVisit = Date.now(); 
+                startKey = Date.now();
+                if(trial_nr < nr_trials)
+                {
+                    claim = claimData[trial_nr];
+                    var trial_nxt = trial_nr + 1;
+                    var claim_nxt = claimData[trial_nxt];
+                    document.getElementById("claimnr_form").value = trial_nr; //DOESN'T WORK
+                    //claim = [{claimnr: '10', item: 'printing', amount: '21.12', pcode: 'ACD351', accountnr: '354674'}, {claimnr: '12', item: 'coffee', amount: '23.87', pcode: 'ERF641', accountnr: '876251'}];
+                    $('#itemtbl tr').not(':first').remove();
+                    var html = '';
+                    //html += '<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['item'] + '</td></tr>';
+                    //html += '<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['item'] + '</td></tr>';
+                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['item'] + '</td></tr>').appendTo('#itemtbl');
+                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['item'] + '</td></tr>').appendTo('#itemtbl');
+                    //$('#itemtbl tr').first().after(html);
+                }
+                else
+                {
+                    alert('You have reached the end of the experiment.');
+                }
+            }
+
+</script>
+    
+
+
+</body>
+</html>

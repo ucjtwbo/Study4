@@ -1,0 +1,50 @@
+<html>
+<head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+
+<body>
+<div>
+<script>
+            
+function shuffle(o){
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+}
+
+var keys  = ['item', 'amount', 'pcode', 'accountnr'];
+var items = ["milk", "coffee", "lunch", "dinner", "taxi", "hotel", "flight", "visit", "seminar", "printing"];
+var amounts = [11.49, 52.64, 42.21, 39.47, 95.32, 40.85, 44.86, 78.90, 12.75, 59.97];
+var pcodes = ["KBB654", "RXX711", "LMH755", "UGG992", "BRV477", "MVI029", "VPH581", "ZKF381", "HJE688", "IDQ133"];
+var accountnrs = [883416, 468950, 591345, 753041, 488439, 144949, 973789, 121651, 636448, 330494];
+
+//one trial.
+var r = {};
+
+var a = [];
+//loops through 6 IAC blocks per participant.
+for(k=1; k<7; k++)
+{
+    //loops through 10 trials per block.
+    for(j=0; j<10; j++)
+    {
+        r['claimnr'] = j+1;
+        r['item'] = items[j];
+        r['amount'] = amounts[j];
+        r['pcode'] = pcodes[j];
+        r['accountnr'] = accountnrs[j];
+        $('body').append('<br><pre>'+JSON.stringify(r, null, ' ')+',');
+        a.push(r);
+    }
+    shuffle(items);
+    shuffle(amounts);
+    shuffle(pcodes);
+    shuffle(accountnrs);
+}
+    
+    console.log(a.length);
+
+</script>
+
+</body>
+</html>

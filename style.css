@@ -1,0 +1,77 @@
+body{
+	font-family: Helvetica,Arial, sans-serif;
+	margin: 25px;
+}
+
+label{
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 250px;
+    text-align: right;
+    padding-right: 5px;
+}
+input {
+  display: inline-block;
+  float: left;
+    margin: 5px;
+}
+
+html, body { height: 100%; }
+
+        input,button, option, select{
+        border-radius: 2px;
+        font-size:16pt;
+        padding:0.2em;
+        border:2px solid #444444;
+        } 
+
+td:before {
+    content: attr(data-text)   
+}
+
+/* Style the tab content */
+ul.tab {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Float the list items side by side */
+ul.tab li {float: left;}
+
+/* Style the links inside the list items */
+ul.tab li a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of links on hover */
+ul.tab li a:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+ul.tab li a:focus, .active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    height: 800px;
+}
+/*
+    visibility: hidden;
+*/
