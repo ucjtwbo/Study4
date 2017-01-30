@@ -7,9 +7,11 @@
             
             var trial_nr = 0;
             var nr_trials = 6;
+            var conditionCount = 0;
             var user = guid();
             //looks which textbox in claim form tab is currently in focus. If it starts a new trial, it's set to Item, the first item in the form.
             var inFocus = false;
+            var conditions = [{item: 'low', amount: 'low', pcode: 'low', accountnr: 'low'}, {item: 'low', amount: 'low', pcode: 'high', accountnr: 'high'}];
             //looks which tab is currently open. If it starts a new trial, it's set to the claim form.
             var tabFocus = 'Claimform-1';
             var claim, tgt_claimnr, tgt_item, tgt_amount, tgt_accountnr; 
@@ -47,24 +49,24 @@
     
     
 <ul class="tab">
-  <li><a href="javascript:void(0)" class="tablinks low" onclick="openCity(event, 'Claimform-1')" id="defaultOpen">Claim form</a></li>
+  <li><a href="javascript:void(0)" class="tablinks claimfrm-1" onclick="openCity(event, 'Claimform-1')" id="defaultOpen">Claim form</a></li>
   <!--  <li><a href="javascript:void(0)" class="tablinks" onclick="openCity(event, 'Claimform-2')">Claim form</a></li> -->
-  <li><a href="javascript:void(0)" class="tablinks low" onclick="openCity(event, 'Item')">Item</a></li>
-  <li><a href="javascript:void(0)" class="tablinks low" onclick="openCity(event, 'Amount')">Amount</a></li>
+  <li><a href="javascript:void(0)" class="tablinks item" onclick="openCity(event, 'Item', this)">Item</a></li>
+  <li><a href="javascript:void(0)" class="tablinks amount" onclick="openCity(event, 'Amount', this)">Amount</a></li>
   <!--  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Pcode\')', 2000);">Project code</a></li> -->
   <!--  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Accountnr\')', 2000);">Account number</a></li> -->
-  <li><a href="javascript:void(0)" class="tablinks high" onclick="openCity(event, 'Pcode')">Project code</a></li>
-  <li><a href="javascript:void(0)" class="tablinks high" onclick="openCity(event, 'Accountnr')">Account number</a></li>
+  <li><a href="javascript:void(0)" class="tablinks pcode" onclick="openCity(event, 'Pcode', this)">Project code</a></li>
+  <li><a href="javascript:void(0)" class="tablinks accountnr" onclick="openCity(event, 'Accountnr', this)">Account number</a></li>
 </ul>
 
-<div id="Claimform-1" class="tabcontent">
+<div id="Claimform-1" class="tabcontent claimfrm-1">
     <h3>Claim form</h3>
     <form name='claimfrm-1' id='claimfrm-1' onsubmit="validateForm(event)">
         <label>Claim number</label><input type="text" name="claimnr_form" id='claimnr_form' autocomplete="off" value='1' disabled="disabled" />
-        <label>Item</label><input type="text" name="item" autocomplete="off">
-        <label>Amount</label><input type="text" name="amount" autocomplete="off">
-        <label>Project code</label><input type="text" name="pcode" autocomplete="off">
-        <label>Account number</label><input type="text" name="accountnr" autocomplete="off">
+        <label>Item</label><input type="text" name="item" id="item" autocomplete="off">
+        <label>Amount</label><input type="text" name="amount" id="amount" autocomplete="off">
+        <label>Project code</label><input type="text" name="pcode" id="pcode" autocomplete="off">
+        <label>Account number</label><input type="text" name="accountnr" id="accountnr" autocomplete="off">
         <input type="submit">
     </form>
 </div>
@@ -81,7 +83,7 @@
     </form>
 </div> -->
 
-<div id="Item" class="tabcontent low">
+<div id="Item" class="tabcontent item">
   <h3>Item</h3>
     
     <table id='itemtbl'>
@@ -101,7 +103,7 @@
 
 </div>
 
-<div id="Amount" class="tabcontent low">
+<div id="Amount" class="tabcontent amount">
   <h3>Amount</h3>
 
         <table id='amounttbl'>
@@ -121,7 +123,7 @@
     
 </div>
     
-<div id="Pcode" class="tabcontent high">
+<div id="Pcode" class="tabcontent pcode">
     <h3>Project code</h3>
     <table id='pcodetbl'>
     <tr>
@@ -139,7 +141,7 @@
     </table> 
 </div>
     
-<div id="Accountnr" class="tabcontent high">
+<div id="Accountnr" class="tabcontent accountnr">
   <h3>Account number</h3>
         <table id='accounttbl'>
     <tr>
@@ -185,9 +187,14 @@ $(document).keyup(function(evt) {
 });
         
 //listens to tab clicks.
-function openCity(evt, cityName) {
+function openCity(evt, cityName, id) {
 
-     var i, tabcontent, tablinks;
+    cityName = cityName;
+    evt = evt;
+    if( $(id).hasClass('high') ){setTimeout(function(){openTab(cityName)}, 2000);}
+    else{openTab(cityName);}
+/*
+    var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
@@ -216,7 +223,51 @@ function openCity(evt, cityName) {
                     evttype: 'visit',
                     datatype: tabFocus,
                     target: '',
-                    charrtyped:'',
+                    chartyped:'',
+                    curroutput: '',
+                    startTime: startVisit,
+                    endTime: endVisit,
+                    timeTaken: endVisit - startVisit,
+                    })
+            tabFocus = cityName;
+            startVisit = Date.now();
+        }
+*/
+
+}
+    
+    function openTab(cityName)
+    {
+            var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    
+    document.getElementById(cityName).style.display = "block";
+    //evt.currentTarget.className += " active";
+    
+    if(cityName=='Claimform-1')
+        {
+            setFocusToTextBox(inFocus);
+        }
+
+    if (cityName != tabFocus)
+        {
+            endVisit = Date.now();
+            keyData.push({
+                    participant: user,
+                    phase: 'training',
+                    trialNo: trial_nr,
+                    iac: 'low',
+                    evttype: 'visit',
+                    datatype: tabFocus,
+                    target: '',
+                    chartyped:'',
                     curroutput: '',
                     startTime: startVisit,
                     endTime: endVisit,
@@ -226,7 +277,7 @@ function openCity(evt, cityName) {
             startVisit = Date.now();
         }
 
-}
+    }
     
     
     // Get the element with id="defaultOpen" and click on it
@@ -368,6 +419,25 @@ function ConvertToCSV(objArray) {
                 trial_nr++;
                 if(trial_nr < nr_trials)
                 {
+                    if ( (trial_nr  % 2) == 0)
+                        {
+                            conditionCount += 1;
+                            var currCondition = conditions[conditionCount];
+                            for (var property in currCondition)
+                                {
+                                    if(currCondition.hasOwnProperty(property))
+                                    {
+                                        if (currCondition[property] == 'high')
+                                        {
+                                            $(".tablinks." + property).addClass('high');
+                                        }
+                                    }
+
+                                }
+
+                        }
+
+
                     claim = claimData[trial_nr];
                     startTrial = Date.now();
                     startVisit = Date.now(); 
