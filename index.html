@@ -48,21 +48,23 @@
     
 <ul class="tab">
   <li><a href="javascript:void(0)" class="tablinks low" onclick="openCity(event, 'Claimform-1')" id="defaultOpen">Claim form</a></li>
-<!--  <li><a href="javascript:void(0)" class="tablinks" onclick="openCity(event, 'Claimform-2')">Claim form</a></li> -->
+  <!--  <li><a href="javascript:void(0)" class="tablinks" onclick="openCity(event, 'Claimform-2')">Claim form</a></li> -->
   <li><a href="javascript:void(0)" class="tablinks low" onclick="openCity(event, 'Item')">Item</a></li>
   <li><a href="javascript:void(0)" class="tablinks low" onclick="openCity(event, 'Amount')">Amount</a></li>
-  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Pcode\')', 2000);">Project code</a></li>
-  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Accountnr\')', 2000);">Account number</a></li>
+  <!--  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Pcode\')', 2000);">Project code</a></li> -->
+  <!--  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Accountnr\')', 2000);">Account number</a></li> -->
+  <li><a href="javascript:void(0)" class="tablinks high" onclick="openCity(event, 'Pcode')">Project code</a></li>
+  <li><a href="javascript:void(0)" class="tablinks high" onclick="openCity(event, 'Accountnr')">Account number</a></li>
 </ul>
 
 <div id="Claimform-1" class="tabcontent">
     <h3>Claim form</h3>
     <form name='claimfrm-1' id='claimfrm-1' onsubmit="validateForm(event)">
         <label>Claim number</label><input type="text" name="claimnr_form" id='claimnr_form' autocomplete="off" value='1' disabled="disabled" />
-        <label>Item</label><input type="text" name="item" id='item' autocomplete="off">
-        <label>Amount</label><input type="text" name="amount" id='amount' autocomplete="off">
-        <label>Project code</label><input type="text" name="pcode" id='pcode' autocomplete="off">
-        <label>Account number</label><input type="text" name="accountnr" id='accountnr' autocomplete="off">
+        <label>Item</label><input type="text" name="item" autocomplete="off">
+        <label>Amount</label><input type="text" name="amount" autocomplete="off">
+        <label>Project code</label><input type="text" name="pcode" autocomplete="off">
+        <label>Account number</label><input type="text" name="accountnr" autocomplete="off">
         <input type="submit">
     </form>
 </div>
@@ -108,12 +110,12 @@
         <td>Amount</td>
     </tr>
     <tr>
-        <td>10</td>
-        <td>21.12</td>
+        <td></td>
+        <td></td>
     </tr>
      <tr>
-        <td>12</td>
-        <td>02.81</td>
+        <td></td>
+        <td></td>
     </tr>
 </table>
     
@@ -127,12 +129,12 @@
         <td>Project code</td>
     </tr>
     <tr>
-        <td>10</td>
-        <td>ACD351</td>
+        <td></td>
+        <td></td>
     </tr>
      <tr>
-        <td>12</td>
-        <td>ERF642</td>
+        <td></td>
+        <td></td>
     </tr>
     </table> 
 </div>
@@ -145,12 +147,12 @@
         <td>Account number</td>
     </tr>
     <tr>
-        <td>10</td>
-        <td>876351</td>
+        <td></td>
+        <td></td>
     </tr>
      <tr>
-        <td>12</td>
-        <td>987642</td>
+        <td></td>
+        <td></td>
     </tr>
 </table>  
 </div>
@@ -159,7 +161,7 @@
 var keyData = [];
 
 $('input').focus(function() {
-   inFocus = $(this).attr('id');
+   inFocus = $(this).attr('name');
 });
     
 //listens to key presses being made.
@@ -181,9 +183,8 @@ $(document).keyup(function(evt) {
                     })
                 startKey = Date.now();
 });
-    
-    
-    //listens to tab clicks.
+        
+//listens to tab clicks.
 function openCity(evt, cityName) {
 
      var i, tabcontent, tablinks;
@@ -357,34 +358,50 @@ function ConvertToCSV(objArray) {
 
 
         window.onload = function() {newTrial()};
-                function newTrial()
-            {
+    
+                //on refreshing the page or hitting submit, a new trial will start.
+    function newTrial()
+        {
                 document.getElementById("claimfrm-1").reset();
                 inFocus = 'item';
                 tabFocus = 'Claimform-1';
-                startTrial = Date.now();
-                startVisit = Date.now(); 
-                startKey = Date.now();
+                trial_nr++;
                 if(trial_nr < nr_trials)
                 {
                     claim = claimData[trial_nr];
+                    startTrial = Date.now();
+                    startVisit = Date.now(); 
+                    startKey = Date.now();
                     var trial_nxt = trial_nr + 1;
                     var claim_nxt = claimData[trial_nxt];
-                    document.getElementById("claimnr_form").value = trial_nr; //DOESN'T WORK
+                    document.getElementById("claimnr_form").value = trial_nr; //WORKS! :)
                     //claim = [{claimnr: '10', item: 'printing', amount: '21.12', pcode: 'ACD351', accountnr: '354674'}, {claimnr: '12', item: 'coffee', amount: '23.87', pcode: 'ERF641', accountnr: '876251'}];
                     $('#itemtbl tr').not(':first').remove();
-                    var html = '';
-                    //html += '<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['item'] + '</td></tr>';
-                    //html += '<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['item'] + '</td></tr>';
+                    $('#amounttbl tr').not(':first').remove();
+                    $('#pcodetbl tr').not(':first').remove();
+                    $('#accounttbl tr').not(':first').remove();
+
+                    //Item table is filled.
                     $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['item'] + '</td></tr>').appendTo('#itemtbl');
                     $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['item'] + '</td></tr>').appendTo('#itemtbl');
-                    //$('#itemtbl tr').first().after(html);
+                    
+                    //Amounts table is filled.
+                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['amount'] + '</td></tr>').appendTo('#amounttbl');
+                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['amount'] + '</td></tr>').appendTo('#amounttbl');
+                    
+                    //Project codes table is filled.
+                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['pcode'] + '</td></tr>').appendTo('#pcodetbl');
+                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['pcode'] + '</td></tr>').appendTo('#pcodetbl');
+                    
+                    //Accounts number table is filled.
+                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['accountnr'] + '</td></tr>').appendTo('#accounttbl');
+                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['accountnr'] + '</td></tr>').appendTo('#accounttbl');
                 }
                 else
                 {
                     alert('You have reached the end of the experiment.');
                 }
-                trial_nr++;
+
             }
 
 </script>

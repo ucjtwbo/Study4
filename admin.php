@@ -20,7 +20,7 @@
             <?php 
                 if(isset($_POST['password'])){
                     if($_POST['password'] == 'delete'){
-                        file_put_contents('master.csv','"ParticipantID", "Phase", "TrialNo", "IAC", "DataType", "Target",  "TargetLength", "NrTyped", "CurrNum", "CharPos","DataPos","CharTime","StartTime","Correct"'.PHP_EOL);
+                        file_put_contents('master.csv','"ParticipantID", "Phase", "TrialNo", "IAC", "EventType", "DataType", "Target",  "CharTyped", "CurrOutput", "StartTime", "EndTime", "TimeTaken"'.PHP_EOL);
                         echo "Master spreadsheet has been reset.";     
                     }
                     else{
