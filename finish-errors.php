@@ -5,7 +5,7 @@
    $forcsv = '';
    foreach($jencode as $value)
    {
-     $forcsv = $forcsv.'"'.$value['participant'].'","'.$value['phase'].'","'.$value['trialNo'].'","'.$value['iac'].'","'.$value['datatype'].'","'.$value['output'].'","'.$value['target'].'","'.$value['startTrial'].'","'.$value['endTrial'].'","'.$value['timeTaken'].'","'.$value['correct'].'"'.PHP_EOL;
+     $forcsv = $forcsv.'"'.$value['participant'].'","'.$value['phase'].'","'.$value['trialNo'].'","'.$value['trialBlock'].'","'.$value['iac'].'","'.$value['datatype'].'","'.$value['output'].'","'.$value['target'].'","'.$value['startTrial'].'","'.$value['endTrial'].'","'.$value['timeTaken'].'","'.$value['correct'].'"'.PHP_EOL;
    }            
                     
    $file = fopen('errors.csv', 'a+');

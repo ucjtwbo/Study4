@@ -72,6 +72,10 @@ ul.tab li a:focus, .active {
     border-top: none;
     height: 800px;
 }
+
+.high{
+    color: red;
+}
 /*
     visibility: hidden;
 */

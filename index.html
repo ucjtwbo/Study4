@@ -7,7 +7,9 @@
             
             var trial_nr = 0;
             var nr_trials = 6;
+            var train_trials = 2;
             var conditionCount = 0;
+            var phase = 'training';
             var user = guid();
             //looks which textbox in claim form tab is currently in focus. If it starts a new trial, it's set to Item, the first item in the form.
             var inFocus = false;
@@ -172,8 +174,9 @@ $(document).keyup(function(evt) {
                 endKey = Date.now();
                     keyData.push({
                     participant: user,
-                    phase: 'training',
+                    phase: phase,
                     trialNo: trial_nr,
+                    trialBlock: conditionCount,
                     iac: currCondition[inFocus],
                     evttype: 'entry',
                     datatype: inFocus,
@@ -257,14 +260,16 @@ function openCity(evt, cityName, id) {
             setFocusToTextBox(inFocus);
         }
 
+    //records duration of visit if switching to another tab.
     if (cityName != tabFocus)
         {
             endVisit = Date.now();
             tabFocus = tabFocus.toLowerCase();
             keyData.push({
                     participant: user,
-                    phase: 'training',
+                    phase: phase,
                     trialNo: trial_nr,
+                    trialBlock: conditionCount,
                     iac: currCondition[tabFocus],
                     evttype: 'visit',
                     datatype: tabFocus,
@@ -295,11 +300,13 @@ document.getElementById("defaultOpen").click();
         document.getElementById(inFocus).focus();
     }
 }
-    
+ 
+    //get the position of the entered item in the form.
     function getPos(){
         if(inFocus == 'item'){datapos = 1};
         if(inFocus == 'amount'){datapos = 2};
-        if(inFocus == 'accountnr'){datapos = 3};
+        if(inFocus == 'pcode'){datapos = 3};        
+        if(inFocus == 'accountnr'){datapos = 4};
         return datapos;
     }
     //prevents user from copy pasting content into textbox.
@@ -344,10 +351,12 @@ document.getElementById("defaultOpen").click();
                 error = 0;
             }
 
+           //if a form is submitted, error and completion time of that trial is sent to csv file.
             errorData.push({
                         participant: user,
-                        phase: 'training',
+                        phase: phase,
                         trialNo: trial_nr,
+                        trialBlock: conditionCount,
                         iac: currCondition[values[i]],
                         datatype: values[i],
                         target: claim[values[i]],
@@ -361,7 +370,7 @@ document.getElementById("defaultOpen").click();
         
         var jsonObject = JSON.stringify(errorData);
         
-        var csv = '"ParticipantID", "Phase", "TrialNo", "IAC", "DataType", "Target", "Output", "StartTime","EndTime", "TimeTaken", "Correct",\n';
+        var csv = '"ParticipantID", "Phase", "TrialNo", "TrialBlock", "IAC", "DataType", "Target", "Output", "StartTime","EndTime", "TimeTaken", "Correct",\n';
         csv += ConvertToCSV(jsonObject);
         
        //Send the data using post.
@@ -379,15 +388,49 @@ function sendData(event) {
     
     var jsonObject = JSON.stringify(keyData);
 
-    var csv = '"ParticipantID", "Phase", "TrialNo", "IAC", "EventType", "DataType", "Target",  "CharTyped", "CurrOutput", "StartTime","EndTime", "TimeTaken", \n';
+    var csv = '"ParticipantID", "Phase", "TrialNo", "TrialBlock", "IAC", "EventType", "DataType", "Target",  "CharTyped", "CurrOutput", "StartTime","EndTime", "TimeTaken", \n';
     csv += ConvertToCSV(jsonObject);
 
     //Send the data using post.
     var posting = $.post('finish.php',{data : jsonObject});
     
-    newTrial();
+    
+   if(trial_nr == train_trials)
+   {
+        alert('That were the training trials. The real experiment starts now.');
+       phase = 'experiment';
+   }
+    
+
     console.log( 'Keylogging data saved' );
    // posting.done(function( data ) { });
+   //if trial_nr has reached the end of a trial_block, the IAC condition changes.
+    if ( (trial_nr  % 2) == 0)
+                        {
+                            conditionCount += 1;
+                            currCondition = conditions[conditionCount];
+                            for (var property in currCondition)
+                                {
+                                    if(currCondition.hasOwnProperty(property))
+                                    {
+                                        if (currCondition[property] == 'high')
+                                        {
+                                            $(".tablinks." + property).removeClass('low').addClass('high');
+                                            $(".tablinks." + property).css('color', 'red');
+                                        }
+                                        else
+                                        {
+                                            $(".tablinks." + property).removeClass('high').addClass('low');
+                                            $(".tablinks." + property).css('color', 'black');
+                                        }
+                                    }
+
+                                }
+
+                        }
+        newTrial();
+    
+    
 }
 
 //Converts JSON object to CSV file.
@@ -419,27 +462,10 @@ function ConvertToCSV(objArray) {
                 inFocus = 'item';
                 tabFocus = 'Claimform-1';
                 trial_nr++;
+            
+                //Execute as long as trial_nr hasn't reached the final trial.
                 if(trial_nr < nr_trials)
                 {
-                    if ( (trial_nr  % 2) == 0)
-                        {
-                            conditionCount += 1;
-                            currCondition = conditions[conditionCount];
-                            for (var property in currCondition)
-                                {
-                                    if(currCondition.hasOwnProperty(property))
-                                    {
-                                        if (currCondition[property] == 'high')
-                                        {
-                                            $(".tablinks." + property).addClass('high');
-                                        }
-                                    }
-
-                                }
-
-                        }
-
-
                     claim = claimData[trial_nr];
                     startTrial = Date.now();
                     startVisit = Date.now(); 
