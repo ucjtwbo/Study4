@@ -31,7 +31,7 @@ td:before {
 }
 
 /* Style the tab content */
-ul.tab {
+.tab {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -40,11 +40,11 @@ ul.tab {
     background-color: #f1f1f1;
 }
 
-/* Float the list items side by side */
-ul.tab li {float: left;}
+/* Float the list items side by side CHANGED*/ 
+.tab li {float: left;}
 
-/* Style the links inside the list items */
-ul.tab li a {
+/* Style the links inside the list items CHANGED*/
+.tab a {
     display: inline-block;
     color: black;
     text-align: center;
@@ -54,13 +54,13 @@ ul.tab li a {
     font-size: 17px;
 }
 
-/* Change background color of links on hover */
-ul.tab li a:hover {
+/* Change background color of links on hover CHANGED*/
+.tab a:hover {
     background-color: #ddd;
 }
 
-/* Create an active/current tablink class */
-ul.tab li a:focus, .active {
+/* Create an active/current tablink class CHANGED ul.tab li a  */
+.tab a:focus, .active {
     background-color: #ccc;
 }
 

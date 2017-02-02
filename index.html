@@ -14,6 +14,7 @@
             //looks which textbox in claim form tab is currently in focus. If it starts a new trial, it's set to Item, the first item in the form.
             var inFocus = false;
             var conditions = [{item: 'low', amount: 'low', pcode: 'low', accountnr: 'low'}, {item: 'low', amount: 'low', pcode: 'high', accountnr: 'high'}, {item: 'low', amount: 'high', pcode: 'low', accountnr: 'high'}, {item: 'high', amount: 'high', pcode: 'low', accountnr: 'low'}];
+            
             var currCondition = conditions[conditionCount];
             //looks which tab is currently open. If it starts a new trial, it's set to the claim form.
             var tabFocus = 'Claimform-1';
@@ -47,20 +48,55 @@
                 s4() + '-' + s4() + s4() + s4();
         }
         </script>
+        <style>
+/* Style the tab content */
+.tab {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Float the list items side by side CHANGED*/ 
+.tab li {float: left;}
+
+/* Style the links inside the list items CHANGED*/
+.tab a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of links on hover CHANGED*/
+.tab a:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class CHANGED ul.tab li a  */
+.tab a:focus, .active {
+    background-color: #ccc;
+}
+        </style>
     </head>
 <body>
     
     
-<ul class="tab">
-  <li><a href="javascript:void(0)" class="tablinks claimfrm-1" onclick="openCity(event, 'Claimform-1')" id="defaultOpen">Claim form</a></li>
+<div class="tab">
+  <a href="javascript:void(0)" class="tablinks claimfrm-1" onclick="openCity(event, 'Claimform-1')" id="defaultOpen">Claim form</a>
   <!--  <li><a href="javascript:void(0)" class="tablinks" onclick="openCity(event, 'Claimform-2')">Claim form</a></li> -->
-  <li><a href="javascript:void(0)" class="tablinks item" onclick="openCity(event, 'Item', this)">Item</a></li>
-  <li><a href="javascript:void(0)" class="tablinks amount" onclick="openCity(event, 'Amount', this)">Amount</a></li>
+  <a href="javascript:void(0)" class="tablinks item" onclick="openCity(event, 'Item', this)">Item</a>
+  <a href="javascript:void(0)" class="tablinks amount" onclick="openCity(event, 'Amount', this)">Amount</a>
   <!--  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Pcode\')', 2000);">Project code</a></li> -->
   <!--  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Accountnr\')', 2000);">Account number</a></li> -->
-  <li><a href="javascript:void(0)" class="tablinks pcode" onclick="openCity(event, 'Pcode', this)">Project code</a></li>
-  <li><a href="javascript:void(0)" class="tablinks accountnr" onclick="openCity(event, 'Accountnr', this)">Account number</a></li>
-</ul>
+  <a href="javascript:void(0)" class="tablinks pcode" onclick="openCity(event, 'Pcode', this)">Project code</a>
+  <a href="javascript:void(0)" class="tablinks accountnr" onclick="openCity(event, 'Accountnr', this)">Account number</a>
+</div>
 
 <div id="Claimform-1" class="tabcontent claimfrm-1">
     <h3>Claim form</h3>
@@ -409,6 +445,7 @@ function sendData(event) {
                         {
                             conditionCount += 1;
                             currCondition = conditions[conditionCount];
+                            //currCondition = ['item', 'pcode', ''];
                             for (var property in currCondition)
                                 {
                                     if(currCondition.hasOwnProperty(property))
@@ -426,7 +463,10 @@ function sendData(event) {
                                     }
 
                                 }
-
+                            var order = ['low', 'low', 'high', 'high'];
+                            $.each(order,function(index,value){
+                               $('.tab').append($('.'+value));
+                            });
                         }
         newTrial();
     
