@@ -12,7 +12,7 @@ label{
     padding-right: 5px;
 }
 input {
-  display: inline-block;
+  /*display: inline-block;*/
   float: left;
     margin: 5px;
 }
@@ -79,3 +79,8 @@ td:before {
 /*
     visibility: hidden;
 */
+
+.pure-u-23-24 {
+    background-color: white;
+    color: black;
+}

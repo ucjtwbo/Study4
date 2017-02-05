@@ -12,10 +12,17 @@ function shuffle(o){
     return o;
 }
 
+/*
 var keys  = ['item', 'amount', 'pcode', 'accountnr'];
 var items = ["milk", "coffee", "lunch", "dinner", "taxi", "hotel", "flight", "visit", "seminar", "printing"];
 var amounts = [11.49, 52.64, 42.21, 39.47, 95.32, 40.85, 44.86, 78.90, 12.75, 59.97];
 var pcodes = ["KBB654", "RXX711", "LMH755", "UGG992", "BRV477", "MVI029", "VPH581", "ZKF381", "HJE688", "IDQ133"];
+var accountnrs = [883416, 468950, 591345, 753041, 488439, 144949, 973789, 121651, 636448, 330494];
+*/
+
+    
+    var keys  = ['amount-1', 'acccode-1', 'amount-2', 'acccode-2'];
+var amounts = [11.49, 52.64, 42.21, 39.47, 95.32, 40.85, 44.86, 78.90, 12.75, 59.97];
 var accountnrs = [883416, 468950, 591345, 753041, 488439, 144949, 973789, 121651, 636448, 330494];
 
 //one trial.
@@ -29,16 +36,18 @@ for(k=1; k<7; k++)
     for(j=0; j<10; j++)
     {
         r['claimnr'] = j+1;
-        r['item'] = items[j];
-        r['amount'] = amounts[j];
-        r['pcode'] = pcodes[j];
-        r['accountnr'] = accountnrs[j];
+        //r['item'] = items[j];
+        r['amount-1'] = amounts[j];
+        //r['pcode'] = pcodes[j];
+        r['acccode-1'] = accountnrs[j];
+        r['amount-2'] = amounts[j+1];
+        r['acccode-2'] = accountnrs[j+2];
         $('body').append('<br><pre>'+JSON.stringify(r, null, ' ')+',');
         a.push(r);
     }
-    shuffle(items);
+    //shuffle(items);
     shuffle(amounts);
-    shuffle(pcodes);
+    //shuffle(pcodes);
     shuffle(accountnrs);
 }
     

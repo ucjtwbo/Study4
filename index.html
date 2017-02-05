@@ -1,12 +1,16 @@
 <html>
     <head>
+    <!--To format form.-->
+
+    <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/grids-responsive-min.css">
+        
     <link href="style.css" rel="StyleSheet" type="text/css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="claimdata.js"></script>
         <script>
-            
-            var trial_nr = 0;
-            var nr_trials = 6;
+            var trial_nr = -1;
+            var nr_trials = 10;
             var train_trials = 2;
             var conditionCount = 0;
             var phase = 'training';
@@ -25,17 +29,6 @@
             var startVisit = Date.now(); 
             var startKey = Date.now();
             var endTrial, endVisit, endKey;
-            //$('<tr><td>10</td><td>printing</td></tr>').appendTo('#itemtbl');
-            
-            //document.getElementById("claimnr").value = trial_nr;
-            //claim = [{claimnr: '10', item: 'printing', amount: '21.12', pcode: 'ACD351', accountnr: '354674'}, {claimnr: '12', item: 'coffee', amount: '23.87', pcode: 'ERF641', accountnr: '876251'}];
-            //$('#itemtbl tr').not(':first').remove();
-                    //var html = '';
-                    //for(var i = 0; i < 1; i++)
-                    //{html += '<tr><td>' + claim[i]['claimnr'] + '</td><td>' + claim[i]['item'] + '</td></tr>';}
-                    // $("<tr><td>10</td><td>printing</td></tr>").appendTo("#itemtbl");
-                    //$('#itemtbl tr').first().after(html);
-
             
         //CREATES USER ID.
         function guid() {
@@ -49,6 +42,11 @@
         }
         </script>
         <style>
+            
+            input{
+                background-color: white;
+                color: black;
+            }
 /* Style the tab content */
 .tab {
     list-style-type: none;
@@ -90,24 +88,71 @@
 <div class="tab">
   <a href="javascript:void(0)" class="tablinks claimfrm-1" onclick="openCity(event, 'Claimform-1')" id="defaultOpen">Claim form</a>
   <!--  <li><a href="javascript:void(0)" class="tablinks" onclick="openCity(event, 'Claimform-2')">Claim form</a></li> -->
-  <a href="javascript:void(0)" class="tablinks item" onclick="openCity(event, 'Item', this)">Item</a>
-  <a href="javascript:void(0)" class="tablinks amount" onclick="openCity(event, 'Amount', this)">Amount</a>
+  <a href="javascript:void(0)" class="tablinks amount-1" onclick="openCity(event, 'Amount-1', this)">Amount</a>
+  <a href="javascript:void(0)" class="tablinks acccode-1" onclick="openCity(event, 'Acccode-1', this)">Account code</a>
   <!--  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Pcode\')', 2000);">Project code</a></li> -->
   <!--  <li><a href="javascript:void(0)" class="tablinks high" onclick="setTimeout('openCity(event, \'Accountnr\')', 2000);">Account number</a></li> -->
-  <a href="javascript:void(0)" class="tablinks pcode" onclick="openCity(event, 'Pcode', this)">Project code</a>
-  <a href="javascript:void(0)" class="tablinks accountnr" onclick="openCity(event, 'Accountnr', this)">Account number</a>
+  <a href="javascript:void(0)" class="tablinks amount-2" onclick="openCity(event, 'Amount-2', this)">Amount</a>
+  <a href="javascript:void(0)" class="tablinks acccode-2" onclick="openCity(event, 'Acccode-2', this)">Account code</a>
 </div>
 
 <div id="Claimform-1" class="tabcontent claimfrm-1">
     <h3>Claim form</h3>
-    <form name='claimfrm-1' id='claimfrm-1' onsubmit="validateForm(event)">
+<!--    <form name='claimfrm-1' id='claimfrm-1' onsubmit="validateForm(event)">
         <label>Claim number</label><input type="text" name="claimnr_form" id='claimnr_form' autocomplete="off" value='1' disabled="disabled" />
-        <label>Item</label><input type="text" name="item" id="item" autocomplete="off">
-        <label>Amount</label><input type="text" name="amount" id="amount" autocomplete="off">
-        <label>Project code</label><input type="text" name="pcode" id="pcode" autocomplete="off">
-        <label>Account number</label><input type="text" name="accountnr" id="accountnr" autocomplete="off">
+        <label>Amount</label><input type="text" name="item" id="item" autocomplete="off">
+        <label>Account code</label><input type="text" name="amount" id="amount" autocomplete="off">
+        <label>Claim number</label><input type="text" name="claimnr_form" id='claimnr_form' autocomplete="off" value='2' disabled="disabled" />
+        <label>Amount</label><input type="text" name="pcode" id="pcode" autocomplete="off">
+        <label>Account code</label><input type="text" name="accountnr" id="accountnr" autocomplete="off">
         <input type="submit">
-    </form>
+    </form>-->
+    
+    <form class="pure-form pure-form-stacked" name='claimfrm-1' id='claimfrm-1' onsubmit="validateForm(event)">
+    <fieldset>
+
+        <div class="pure-g">
+            <div class="pure-u-1 pure-u-md-1-3">
+                <label>Claim number</label>
+                <input name="claimnr_form" id='claimnr_form' class="pure-u-23-24" type="text" autocomplete="off" value='1' disabled >
+            </div>
+            
+            <div class="pure-u-1 pure-u-md-1-3">
+                <label>Amount</label>
+                <input class="pure-u-23-24" type="text" name="amount" id="amount-1" autocomplete="off">
+            </div>
+
+            <div class="pure-u-1 pure-u-md-1-3">
+                <label for="last-name">Account code</label>
+                <input class="pure-u-23-24" type="text" name="accountnr" id="acccode-1" autocomplete="off">
+            </div>
+            
+             <div class="pure-u-1 pure-u-md-1-3">
+                <input class="pure-u-23-24" id='claimnr-2' type="text" autocomplete="off" value='2' name="claimnr" autocomplete="off" disabled >
+            </div>
+
+            <div class="pure-u-1 pure-u-md-1-3">
+                <input class="pure-u-23-24" type="text" name="amount" id="amount-2" autocomplete="off">
+            </div>
+
+            <div class="pure-u-1 pure-u-md-1-3">
+                <input class="pure-u-23-24" type="text" name="accountnr" id="acccode-2" autocomplete="off">
+            </div>
+        </div>
+
+        <button type="submit" class="pure-button pure-button-primary">Submit</button>
+    </fieldset>
+</form>
+    
+<!--        <h3>Claim form</h3>
+    <form id='claimfrm-2' onsubmit="sendData(event)">
+        <label>Claim number</label><input type="text" name="claimnr" autocomplete="off" value="12" disabled="disabled" />
+        <label>Item</label><input type="text" name="item" autocomplete="off">
+        <label>Amount</label><input type="text" name="amount" autocomplete="off">
+        <label>Project code</label><input type="text" name="pcode" autocomplete="off">
+        <label>Account number</label><input type="text" name="accountnr" autocomplete="off">
+        <input type="submit">
+    </form>-->
 </div>
     
     <!--  <div id="Claimform-2" class="tabcontent">
@@ -122,10 +167,10 @@
     </form>
 </div> -->
 
-<div id="Item" class="tabcontent item">
-  <h3>Item</h3>
+<div id="Amount-1" class="tabcontent amount-1">
+  <h3>Amount</h3>
     
-    <table id='itemtbl'>
+    <table id='amounttbl-1'>
     <tr>
         <td>Claim number</td>
         <td>Item</td>
@@ -142,13 +187,13 @@
 
 </div>
 
-<div id="Amount" class="tabcontent amount">
-  <h3>Amount</h3>
+<div id="Acccode-1" class="tabcontent acccode-1">
+  <h3>Account code</h3>
 
-        <table id='amounttbl'>
+        <table id='accodetbl-1'>
     <tr>
         <td data-text="Claim number"></td>
-        <td>Amount</td>
+        <td>Account code</td>
     </tr>
     <tr>
         <td></td>
@@ -162,12 +207,12 @@
     
 </div>
     
-<div id="Pcode" class="tabcontent pcode">
-    <h3>Project code</h3>
-    <table id='pcodetbl'>
+<div id="Amount-2" class="tabcontent amount-2">
+    <h3>Amount</h3>
+    <table id='amounttbl-2'>
     <tr>
         <td>Claim number</td>
-        <td>Project code</td>
+        <td>Amount</td>
     </tr>
     <tr>
         <td></td>
@@ -180,12 +225,12 @@
     </table> 
 </div>
     
-<div id="Accountnr" class="tabcontent accountnr">
-  <h3>Account number</h3>
-        <table id='accounttbl'>
+<div id="Acccode-2" class="tabcontent acccode-2">
+  <h3>Account code</h3>
+        <table id='accodetbl-2'>
     <tr>
         <td>Claim number</td>
-        <td>Account number</td>
+        <td>Account code</td>
     </tr>
     <tr>
         <td></td>
@@ -202,7 +247,7 @@
 var keyData = [];
 
 $('input').focus(function() {
-   inFocus = $(this).attr('name');
+   inFocus = $(this).attr('id');
 });
     
 //listens to key presses being made.
@@ -216,6 +261,7 @@ $(document).keyup(function(evt) {
                     iac: currCondition[inFocus],
                     evttype: 'entry',
                     datatype: inFocus,
+                    pos: $('#'+ inFocus).index('form input'),
                     target: claim[inFocus],
                     chartyped:String.fromCharCode(evt.keyCode),
                     curroutput: document.getElementById(inFocus).value,
@@ -231,8 +277,10 @@ function openCity(evt, cityName, id) {
 
     cityName = cityName;
     evt = evt;
+    //console.log( $(id).index() );
+    tabPos = $(id).index();
     if( $(id).hasClass('high') ){setTimeout(function(){openTab(cityName)}, 2000);}
-    else{openTab(cityName);}
+    else{openTab(cityName, tabPos);}
 /*
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -276,7 +324,7 @@ function openCity(evt, cityName, id) {
 
 }
     
-    function openTab(cityName)
+    function openTab(cityName, tabPos)
     {
             var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -309,6 +357,7 @@ function openCity(evt, cityName, id) {
                     iac: currCondition[tabFocus],
                     evttype: 'visit',
                     datatype: tabFocus,
+                    pos: tabPos,
                     target: '',
                     chartyped:'',
                     curroutput: '',
@@ -330,7 +379,7 @@ document.getElementById("defaultOpen").click();
     function setFocusToTextBox(inFocus){
         if(inFocus == false)
             {
-                document.getElementById("item").focus();
+                document.getElementById("amount-1").focus();
             }
     else{
         document.getElementById(inFocus).focus();
@@ -364,7 +413,7 @@ document.getElementById("defaultOpen").click();
     {
         event.preventDefault();
         claim = claimData[trial_nr];
-        var values = ['item', 'amount', 'pcode', 'accountnr'];
+        var values = ['amount-1', 'acccode-1', 'amount-2', 'acccode-2'];
         endTrial = Date.now();
         for (i = 0; i < values.length; i++) 
 	   {
@@ -424,22 +473,22 @@ function sendData(event) {
     
     var jsonObject = JSON.stringify(keyData);
 
-    var csv = '"ParticipantID", "Phase", "TrialNo", "TrialBlock", "IAC", "EventType", "DataType", "Target",  "CharTyped", "CurrOutput", "StartTime","EndTime", "TimeTaken", \n';
+    var csv = '"ParticipantID", "Phase", "TrialNo", "TrialBlock", "IAC", "EventType", "DataType", "Pos", "Target",  "CharTyped", "CurrOutput", "StartTime","EndTime", "TimeTaken", \n';
     csv += ConvertToCSV(jsonObject);
 
     //Send the data using post.
     var posting = $.post('finish.php',{data : jsonObject});
     
     
-   if(trial_nr == train_trials)
+   if(trial_nr > train_trials)
    {
         alert('That were the training trials. The real experiment starts now.');
        phase = 'experiment';
    }
     
 
-    console.log( 'Keylogging data saved' );
-   // posting.done(function( data ) { });
+    
+   posting.done(function( data ) { console.log( 'Keylogging data saved' );});
    //if trial_nr has reached the end of a trial_block, the IAC condition changes.
     if ( (trial_nr  % 2) == 0)
                         {
@@ -463,7 +512,7 @@ function sendData(event) {
                                     }
 
                                 }
-                            var order = ['low', 'low', 'high', 'high'];
+                            var order = ['high', 'high', 'low', 'low'];
                             $.each(order,function(index,value){
                                $('.tab').append($('.'+value));
                             });
@@ -493,15 +542,19 @@ function ConvertToCSV(objArray) {
     }
 
 
-        window.onload = function() {newTrial()};
+        window.onload = function() {
+            
+            $.getScript("claimdata.js");
+            newTrial()};
     
                 //on refreshing the page or hitting submit, a new trial will start.
     function newTrial()
         {
                 document.getElementById("claimfrm-1").reset();
-                inFocus = 'item';
+                inFocus = 'amount-1';
+                setFocusToTextBox(inFocus);
                 tabFocus = 'Claimform-1';
-                trial_nr++;
+                trial_nr += 2;
             
                 //Execute as long as trial_nr hasn't reached the final trial.
                 if(trial_nr < nr_trials)
@@ -513,27 +566,20 @@ function ConvertToCSV(objArray) {
                     var trial_nxt = trial_nr + 1;
                     var claim_nxt = claimData[trial_nxt];
                     document.getElementById("claimnr_form").value = trial_nr; //WORKS! :)
+                    document.getElementById("claimnr-2").value = trial_nxt; //WORKS! :)
                     //claim = [{claimnr: '10', item: 'printing', amount: '21.12', pcode: 'ACD351', accountnr: '354674'}, {claimnr: '12', item: 'coffee', amount: '23.87', pcode: 'ERF641', accountnr: '876251'}];
-                    $('#itemtbl tr').not(':first').remove();
-                    $('#amounttbl tr').not(':first').remove();
-                    $('#pcodetbl tr').not(':first').remove();
-                    $('#accounttbl tr').not(':first').remove();
+                    $('#amounttbl-1 tr').not(':first').remove();
+                    $('#acccode-1 tr').not(':first').remove();
+                    $('#amounttbl-2 tr').not(':first').remove();
+                    $('#acccode-2 tr').not(':first').remove();
 
-                    //Item table is filled.
-                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['item'] + '</td></tr>').appendTo('#itemtbl');
-                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['item'] + '</td></tr>').appendTo('#itemtbl');
-                    
                     //Amounts table is filled.
-                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['amount'] + '</td></tr>').appendTo('#amounttbl');
-                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['amount'] + '</td></tr>').appendTo('#amounttbl');
-                    
-                    //Project codes table is filled.
-                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['pcode'] + '</td></tr>').appendTo('#pcodetbl');
-                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['pcode'] + '</td></tr>').appendTo('#pcodetbl');
-                    
+                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['amount-1'] + '</td></tr>').appendTo('#amounttbl-1');
+                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['amount-2'] + '</td></tr>').appendTo('#amounttbl-2');
+                                     
                     //Accounts number table is filled.
-                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['accountnr'] + '</td></tr>').appendTo('#accounttbl');
-                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['accountnr'] + '</td></tr>').appendTo('#accounttbl');
+                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['acccode-1'] + '</td></tr>').appendTo('#accodetbl-1');
+                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['acccode-2'] + '</td></tr>').appendTo('#accodetbl-2');
                 }
                 else
                 {
