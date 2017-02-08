@@ -9,15 +9,16 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="claimdata.js"></script>
         <script>
+            var claim_nr = 0;
             var trial_nr = -1;
             var nr_trials = 10;
             var train_trials = 2;
             var conditionCount = 0;
             var phase = 'training';
-            var user = guid();
+            var user;
             //looks which textbox in claim form tab is currently in focus. If it starts a new trial, it's set to Item, the first item in the form.
             var inFocus = false;
-            var conditions = [{item: 'low', amount: 'low', pcode: 'low', accountnr: 'low'}, {item: 'low', amount: 'low', pcode: 'high', accountnr: 'high'}, {item: 'low', amount: 'high', pcode: 'low', accountnr: 'high'}, {item: 'high', amount: 'high', pcode: 'low', accountnr: 'low'}];
+            var conditions = [{'amount-1': 'low', 'acccode-1': 'low', 'amount-2': 'low', 'acccode-2': 'low'}, {'amount-1': 'low', 'acccode-1': 'low', 'amount-2': 'high', 'acccode-2': 'high'}, {'amount-1': 'low', 'acccode-1': 'high', 'amount-2': 'low', 'acccode-2': 'high'}, {'amount-1': 'high','acccode-1': 'high', 'amount-2': 'low', 'acccode-2': 'low'}];
             
             var currCondition = conditions[conditionCount];
             //looks which tab is currently open. If it starts a new trial, it's set to the claim form.
@@ -25,9 +26,9 @@
             var claim, tgt_claimnr, tgt_item, tgt_amount, tgt_accountnr; 
             var errorData = [];
             claim = claimData[trial_nr];
-            var startTrial = Date.now();
-            var startVisit = Date.now(); 
-            var startKey = Date.now();
+            var startTrial = Math.floor(Date.now());
+            var startVisit = Math.floor(Date.now()); 
+            var startKey = Math.floor(Date.now());
             var endTrial, endVisit, endKey;
             
         //CREATES USER ID.
@@ -43,7 +44,7 @@
         </script>
         <style>
             
-            input{
+            input#claimnr_form.pure-u-23-24, input#claimnr-2.pure-u-23-24 {
                 background-color: white;
                 color: black;
             }
@@ -84,7 +85,40 @@
     </head>
 <body>
     
+     <div id="start" class='message'>
+        <h2>Participant</h2>
+        <input type="text" name="part_id" id="part_id" autocomplete="off"><br><br>
+        <h2>Condition</h2>
+        <button id="A" class='toinstr condition' tabindex="-1">A</button>
+        <button id="B" class='toinstr condition' tabindex="-1">B</button>
+        <button id="C" class='toinstr condition' tabindex="-1">C</button>
+        <button id="D" class='toinstr condition' tabindex="-1">D</button>
+    </div>
     
+    
+    
+    <script>
+        //ASSIGN CONDITION.
+    $('.toinstr').click(function() {
+        $('.message').hide();
+        if($(this).hasClass("condition"))
+        {
+            if(this.id == "A"){conditionCount = 0;}
+            if(this.id == "B"){conditionCount = 1;}
+            if(this.id == "C"){conditionCount = 2;}
+            if(this.id == "D"){conditionCount = 3;}
+            user = document.getElementById('part_id').value;
+            startTrial = Math.floor(Date.now());
+            startVisit = Math.floor(Date.now()); 
+            startKey = Math.floor(Date.now());
+            $('#experiment').show();
+        }
+        });
+    
+    
+    </script>
+
+    <div id='experiment' style="display: none;">
 <div class="tab">
   <a href="javascript:void(0)" class="tablinks claimfrm-1" onclick="openCity(event, 'Claimform-1')" id="defaultOpen">Claim form</a>
   <!--  <li><a href="javascript:void(0)" class="tablinks" onclick="openCity(event, 'Claimform-2')">Claim form</a></li> -->
@@ -242,7 +276,7 @@
     </tr>
 </table>  
 </div>
-    
+    </div>
 <script>    
 var keyData = [];
 
@@ -250,18 +284,19 @@ $('input').focus(function() {
    inFocus = $(this).attr('id');
 });
     
+    
 //listens to key presses being made.
 $(document).keyup(function(evt) {
-                endKey = Date.now();
+                endKey = Math.floor(Date.now());
                     keyData.push({
                     participant: user,
                     phase: phase,
-                    trialNo: trial_nr,
-                    trialBlock: conditionCount,
+                    condition: conditionCount,
+                    trialNo: claim_nr,                       
                     iac: currCondition[inFocus],
                     evttype: 'entry',
-                    datatype: inFocus,
-                    pos: $('#'+ inFocus).index('form input'),
+                    datatype: inFocus.split("-")[0],
+                    pos: inFocus.split("-")[1],
                     target: claim[inFocus],
                     chartyped:String.fromCharCode(evt.keyCode),
                     curroutput: document.getElementById(inFocus).value,
@@ -269,10 +304,10 @@ $(document).keyup(function(evt) {
                     endTime: endKey,
                     timeTaken: endKey - startKey,
                     })
-                startKey = Date.now();
+                startKey = Math.floor(Date.now());
 });
         
-//listens to tab clicks.
+//listens to tab clicks; if the clicked tab has class 'high', a timeout is added.
 function openCity(evt, cityName, id) {
 
     cityName = cityName;
@@ -302,7 +337,7 @@ function openCity(evt, cityName, id) {
 
     if (cityName != tabFocus)
         {
-            endVisit = Date.now();
+            endVisit = Math.floor(Date.now());
             keyData.push({
                     participant: user,
                     phase: 'training',
@@ -318,12 +353,13 @@ function openCity(evt, cityName, id) {
                     timeTaken: endVisit - startVisit,
                     })
             tabFocus = cityName;
-            startVisit = Date.now();
+            startVisit = Math.floor(Date.now());
         }
 */
 
 }
     
+    //Opens the clicked tab.
     function openTab(cityName, tabPos)
     {
             var i, tabcontent, tablinks;
@@ -347,17 +383,17 @@ function openCity(evt, cityName, id) {
     //records duration of visit if switching to another tab.
     if (cityName != tabFocus)
         {
-            endVisit = Date.now();
+            endVisit = Math.floor(Date.now());
             tabFocus = tabFocus.toLowerCase();
             keyData.push({
                     participant: user,
                     phase: phase,
-                    trialNo: trial_nr,
-                    trialBlock: conditionCount,
+                    condition: conditionCount,
+                    trialNo: claim_nr,
                     iac: currCondition[tabFocus],
                     evttype: 'visit',
-                    datatype: tabFocus,
-                    pos: tabPos,
+                    datatype: tabFocus.split("-")[0],
+                    pos: tabFocus.split("-")[1],
                     target: '',
                     chartyped:'',
                     curroutput: '',
@@ -366,13 +402,13 @@ function openCity(evt, cityName, id) {
                     timeTaken: endVisit - startVisit,
                     })
             tabFocus = cityName;
-            startVisit = Date.now();
+            startVisit = Math.floor(Date.now());
         }
 
     }
     
     
-    // Get the element with id="defaultOpen" and click on it
+// Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
     
     //keep the selected textbox when switching tabs.
@@ -414,7 +450,7 @@ document.getElementById("defaultOpen").click();
         event.preventDefault();
         claim = claimData[trial_nr];
         var values = ['amount-1', 'acccode-1', 'amount-2', 'acccode-2'];
-        endTrial = Date.now();
+        endTrial = Math.floor(Date.now());
         for (i = 0; i < values.length; i++) 
 	   {
            var output = document.forms["claimfrm-1"][values[i]].value;
@@ -440,10 +476,11 @@ document.getElementById("defaultOpen").click();
             errorData.push({
                         participant: user,
                         phase: phase,
-                        trialNo: trial_nr,
-                        trialBlock: conditionCount,
+                        condition: conditionCount,
+                        trialNo: claim_nr,
                         iac: currCondition[values[i]],
-                        datatype: values[i],
+                        datatype: values[i].split("-")[0],
+                        pos: values[i].split("-")[1],
                         target: claim[values[i]],
                         output: document.forms["claimfrm-1"][values[i]].value,
                         startTrial: startTrial,
@@ -455,7 +492,7 @@ document.getElementById("defaultOpen").click();
         
         var jsonObject = JSON.stringify(errorData);
         
-        var csv = '"ParticipantID", "Phase", "TrialNo", "TrialBlock", "IAC", "DataType", "Target", "Output", "StartTime","EndTime", "TimeTaken", "Correct",\n';
+        var csv = '"ParticipantID", "Phase", "Condition", "TrialNo", "IAC", "DataType", "Pos", "Target", "Output", "StartTime", "EndTime", "TimeTaken", "Correct",\n';
         csv += ConvertToCSV(jsonObject);
         
        //Send the data using post.
@@ -463,6 +500,7 @@ document.getElementById("defaultOpen").click();
     
         sendData(event);
         console.log( 'Error data saved' );
+        errorData = [];
     //posting.done(function( data ) {});
                  
     }
@@ -473,14 +511,14 @@ function sendData(event) {
     
     var jsonObject = JSON.stringify(keyData);
 
-    var csv = '"ParticipantID", "Phase", "TrialNo", "TrialBlock", "IAC", "EventType", "DataType", "Pos", "Target",  "CharTyped", "CurrOutput", "StartTime","EndTime", "TimeTaken", \n';
+    var csv = '"ParticipantID", "Phase", "Condition", "TrialNo", "IAC", "EventType", "DataType", "Pos", "Target",  "CharTyped", "CurrOutput", "StartTime","EndTime", "TimeTaken", \n';
     csv += ConvertToCSV(jsonObject);
 
     //Send the data using post.
     var posting = $.post('finish.php',{data : jsonObject});
     
     
-   if(trial_nr > train_trials)
+   if(trial_nr == 3)
    {
         alert('That were the training trials. The real experiment starts now.');
        phase = 'experiment';
@@ -489,10 +527,11 @@ function sendData(event) {
 
     
    posting.done(function( data ) { console.log( 'Keylogging data saved' );});
+    
+    keyData = [];
    //if trial_nr has reached the end of a trial_block, the IAC condition changes.
-    if ( (trial_nr  % 2) == 0)
+    if (  phase == 'experiment')
                         {
-                            conditionCount += 1;
                             currCondition = conditions[conditionCount];
                             //currCondition = ['item', 'pcode', ''];
                             for (var property in currCondition)
@@ -502,20 +541,20 @@ function sendData(event) {
                                         if (currCondition[property] == 'high')
                                         {
                                             $(".tablinks." + property).removeClass('low').addClass('high');
-                                            $(".tablinks." + property).css('color', 'red');
+                                            /*$(".tablinks." + property).css('color', 'red');*/
                                         }
                                         else
                                         {
                                             $(".tablinks." + property).removeClass('high').addClass('low');
-                                            $(".tablinks." + property).css('color', 'black');
+                                            /*$(".tablinks." + property).css('color', 'black');*/
                                         }
                                     }
 
                                 }
-                            var order = ['high', 'high', 'low', 'low'];
-                            $.each(order,function(index,value){
+/*                            var order = ['high', 'high', 'low', 'low'];
+                            $.each(order,function(index,value){ß
                                $('.tab').append($('.'+value));
-                            });
+                            });*/
                         }
         newTrial();
     
@@ -555,14 +594,15 @@ function ConvertToCSV(objArray) {
                 setFocusToTextBox(inFocus);
                 tabFocus = 'Claimform-1';
                 trial_nr += 2;
+                claim_nr += 1;
             
                 //Execute as long as trial_nr hasn't reached the final trial.
                 if(trial_nr < nr_trials)
                 {
                     claim = claimData[trial_nr];
-                    startTrial = Date.now();
-                    startVisit = Date.now(); 
-                    startKey = Date.now();
+                    startTrial = Math.floor(Date.now());
+                    startVisit = Math.floor(Date.now()); 
+                    startKey = Math.floor(Date.now());
                     var trial_nxt = trial_nr + 1;
                     var claim_nxt = claimData[trial_nxt];
                     document.getElementById("claimnr_form").value = trial_nr; //WORKS! :)
@@ -574,16 +614,16 @@ function ConvertToCSV(objArray) {
                     $('#acccode-2 tr').not(':first').remove();
 
                     //Amounts table is filled.
-                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['amount-1'] + '</td></tr>').appendTo('#amounttbl-1');
-                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['amount-2'] + '</td></tr>').appendTo('#amounttbl-2');
+                    $('<tr><td>' + trial_nr + '</td><td>' + claim['amount-1'] + '</td></tr>').appendTo('#amounttbl-1');
+                    $('<tr><td>' + trial_nxt + '</td><td>' + claim['amount-2'] + '</td></tr>').appendTo('#amounttbl-2');
                                      
                     //Accounts number table is filled.
-                    $('<tr><td>' + claimData[trial_nr]['claimnr'] + '</td><td>' + claimData[trial_nr]['acccode-1'] + '</td></tr>').appendTo('#accodetbl-1');
-                    $('<tr><td>' + claimData[trial_nxt]['claimnr'] + '</td><td>' + claimData[trial_nxt]['acccode-2'] + '</td></tr>').appendTo('#accodetbl-2');
+                    $('<tr><td>' + trial_nr + '</td><td>' + claim['acccode-1'] + '</td></tr>').appendTo('#accodetbl-1');
+                    $('<tr><td>' + trial_nxt + '</td><td>' + claim['acccode-2'] + '</td></tr>').appendTo('#accodetbl-2');
                 }
                 else
                 {
-                    alert('You have reached the end of the experiment.');
+                    alert('You have reached the end of the experiment. Please let the researcher know.');
                 }
 
             }

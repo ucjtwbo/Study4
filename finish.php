@@ -7,7 +7,7 @@
    $forcsv = '';
    foreach($jencode as $value)
    {
-     $forcsv = $forcsv.'"'.$value['participant'].'","'.$value['phase'].'","'.$value['trialNo'].'","'.$value['trialBlock'].'","'.$value['iac'].'","'.$value['evttype'].'","'.$value['datatype'].'","'.$value['pos'].'","'.$value['target'].'","'.$value['chartyped'].'","'.$value['curroutput'].'","'.$value['startTime'].'","'.$value['endTime'].'","'.$value['timeTaken'].'"'.PHP_EOL;
+     $forcsv = $forcsv.'"'.$value['participant'].'","'.$value['phase'].'","'.$value['condition'].'","'.$value['trialNo'].'","'.$value['iac'].'","'.$value['evttype'].'","'.$value['datatype'].'","'.$value['pos'].'","'.$value['target'].'","'.$value['chartyped'].'","'.$value['curroutput'].'","'.$value['startTime'].'","'.$value['endTime'].'","'.$value['timeTaken'].'"'.PHP_EOL;
    }            
                         
    $file = fopen('master.csv', 'a+');
