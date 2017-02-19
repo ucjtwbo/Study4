@@ -22,26 +22,26 @@ var accountnrs = [883416, 468950, 591345, 753041, 488439, 144949, 973789, 121651
 
     
     var keys  = ['amount-1', 'acccode-1', 'amount-2', 'acccode-2'];
-var amounts = [11.49, 52.64, 42.21, 39.47, 95.32, 40.85, 44.86, 78.90, 12.75, 59.97];
-var accountnrs = [883416, 468950, 591345, 753041, 488439, 144949, 973789, 121651, 636448, 330494];
+var amounts = [70.94, 98.06, 54.30, 96.48, 22.65, 92.57, 63.92, 45.81, 31.98, 30.24, 87.37, 93.20, 14.12, 29.72, 30.93, 40.87, 19.69, 51.59, 83.71, 23.99];
+var accountnrs = [382247, 249162, 844100, 822933, 110610, 947266, 883173, 618089, 923416, 976274, 968411, 634665, 348617, 272210, 965503, 706420, 160744, 989462, 102083, 483132];
 
 //one trial.
 var r = {};
 
 var a = [];
 //loops through 6 IAC blocks per participant.
-for(k=1; k<7; k++)
+for(k=0; k<7; k++)
 {
-    //loops through 10 trials per block.
-    for(j=0; j<10; j++)
+    //loops through trials per block.
+    for(j=3; j<13; j++)
     {
-        r['claimnr'] = j+1;
+        r['claimnr'] = j + (k*10);
         //r['item'] = items[j];
         r['amount-1'] = amounts[j];
         //r['pcode'] = pcodes[j];
         r['acccode-1'] = accountnrs[j];
         r['amount-2'] = amounts[j+1];
-        r['acccode-2'] = accountnrs[j+2];
+        r['acccode-2'] = accountnrs[j+1];
         $('body').append('<br><pre>'+JSON.stringify(r, null, ' ')+',');
         a.push(r);
     }

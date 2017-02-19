@@ -9,23 +9,23 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="claimdata.js"></script>
         <script>
-            var claim_nr = 0;
+            var claim_nr = -1;
             var trial_nr = -1;
-            var nr_trials = 10;
+            var nr_trials = 50;
             var train_trials = 2;
             var conditionCount = 0;
             var phase = 'training';
             var user;
             //looks which textbox in claim form tab is currently in focus. If it starts a new trial, it's set to Item, the first item in the form.
             var inFocus = false;
-            var conditions = [{'amount-1': 'low', 'acccode-1': 'low', 'amount-2': 'low', 'acccode-2': 'low'}, {'amount-1': 'low', 'acccode-1': 'low', 'amount-2': 'high', 'acccode-2': 'high'}, {'amount-1': 'low', 'acccode-1': 'high', 'amount-2': 'low', 'acccode-2': 'high'}, {'amount-1': 'high','acccode-1': 'high', 'amount-2': 'low', 'acccode-2': 'low'}];
+            var conditions = [{'amount-1': 'low', 'acccode-1': 'high', 'amount-2': 'high', 'acccode-2': 'low'}, {'amount-1': 'high', 'acccode-1': 'low', 'amount-2': 'low', 'acccode-2': 'high'}, {'amount-1': 'low', 'acccode-1': 'high', 'amount-2': 'low', 'acccode-2': 'high'}, {'amount-1': 'high','acccode-1': 'low', 'amount-2': 'high', 'acccode-2': 'low'}, {'amount-1': 'low','acccode-1': 'low', 'amount-2': 'high', 'acccode-2': 'high'}, {'amount-1': 'high','acccode-1': 'high', 'amount-2': 'low', 'acccode-2': 'low'}, {'amount-1': 'low','acccode-1': 'low', 'amount-2': 'low', 'acccode-2': 'low'}, {'amount-1': 'high','acccode-1': 'high', 'amount-2': 'high', 'acccode-2': 'high'}];
             
             var currCondition = conditions[conditionCount];
             //looks which tab is currently open. If it starts a new trial, it's set to the claim form.
             var tabFocus = 'Claimform-1';
             var claim, tgt_claimnr, tgt_item, tgt_amount, tgt_accountnr; 
             var errorData = [];
-            claim = claimData[trial_nr];
+            claim = claimData[claim_nr];
             var startTrial = Math.floor(Date.now());
             var startVisit = Math.floor(Date.now()); 
             var startKey = Math.floor(Date.now());
@@ -43,6 +43,10 @@
         }
         </script>
         <style>
+            
+            th, td {
+    padding: 15px;
+}
             
             input#claimnr_form.pure-u-23-24, input#claimnr-2.pure-u-23-24 {
                 background-color: white;
@@ -93,20 +97,34 @@
         <button id="B" class='toinstr condition' tabindex="-1">B</button>
         <button id="C" class='toinstr condition' tabindex="-1">C</button>
         <button id="D" class='toinstr condition' tabindex="-1">D</button>
+        <button id="E" class='toinstr condition' tabindex="-1">E</button>
+        <button id="F" class='toinstr condition' tabindex="-1">F</button>
+        <button id="G" class='toinstr condition' tabindex="-1">G</button>
+        <button id="H" class='toinstr condition' tabindex="-1">H</button>
     </div>
     
+    
+    <div id="break" class='message' style="display: none;">
+        <h2>Take a break!</h2>
+        <p>Please take a short break. Press continue when you are ready to continue the experiment.</p>
+        <button id='continue'>Continue</button>
+    </div>
     
     
     <script>
         //ASSIGN CONDITION.
     $('.toinstr').click(function() {
-        $('.message').hide();
+        $('#start').hide();
         if($(this).hasClass("condition"))
         {
             if(this.id == "A"){conditionCount = 0;}
             if(this.id == "B"){conditionCount = 1;}
             if(this.id == "C"){conditionCount = 2;}
             if(this.id == "D"){conditionCount = 3;}
+            if(this.id == "E"){conditionCount = 4;}
+            if(this.id == "F"){conditionCount = 5;}
+            if(this.id == "G"){conditionCount = 6;}
+            if(this.id == "H"){conditionCount = 7;}
             user = document.getElementById('part_id').value;
             startTrial = Math.floor(Date.now());
             startVisit = Math.floor(Date.now()); 
@@ -115,6 +133,14 @@
         }
         });
     
+        $('#continue').click(function() {
+        $('#break').hide();
+        startTrial = Math.floor(Date.now());
+        startVisit = Math.floor(Date.now()); 
+        startKey = Math.floor(Date.now());
+        newTrial();
+        $('#experiment').show();
+        })
     
     </script>
 
@@ -207,7 +233,7 @@
     <table id='amounttbl-1'>
     <tr>
         <td>Claim number</td>
-        <td>Item</td>
+        <td>Amount</td>
     </tr>
     <tr>
         <td></td>
@@ -311,9 +337,11 @@ $(document).keyup(function(evt) {
 function openCity(evt, cityName, id) {
 
     cityName = cityName;
+    document.getElementById(tabFocus).style.display = "none";
     evt = evt;
     //console.log( $(id).index() );
     tabPos = $(id).index();
+    
     if( $(id).hasClass('high') ){setTimeout(function(){openTab(cityName)}, 2000);}
     else{openTab(cityName, tabPos);}
 /*
@@ -448,7 +476,7 @@ document.getElementById("defaultOpen").click();
     function validateForm(event)
     {
         event.preventDefault();
-        claim = claimData[trial_nr];
+        claim = claimData[claim_nr];
         var values = ['amount-1', 'acccode-1', 'amount-2', 'acccode-2'];
         endTrial = Math.floor(Date.now());
         for (i = 0; i < values.length; i++) 
@@ -505,7 +533,7 @@ document.getElementById("defaultOpen").click();
                  
     }
                  
-//Sends collected key and visit data to masters.csv file.
+//Sends collected key and visit data to master.csv file.
 function sendData(event) {
     event.preventDefault();
     
@@ -517,49 +545,62 @@ function sendData(event) {
     //Send the data using post.
     var posting = $.post('finish.php',{data : jsonObject});
     
-    
-   if(trial_nr == 3)
-   {
-        alert('That were the training trials. The real experiment starts now.');
-       phase = 'experiment';
-   }
-    
-
-    
    posting.done(function( data ) { console.log( 'Keylogging data saved' );});
-    
+        
     keyData = [];
-   //if trial_nr has reached the end of a trial_block, the IAC condition changes.
-    if (  phase == 'experiment')
-                        {
-                            currCondition = conditions[conditionCount];
-                            //currCondition = ['item', 'pcode', ''];
-                            for (var property in currCondition)
-                                {
-                                    if(currCondition.hasOwnProperty(property))
-                                    {
-                                        if (currCondition[property] == 'high')
-                                        {
-                                            $(".tablinks." + property).removeClass('low').addClass('high');
-                                            /*$(".tablinks." + property).css('color', 'red');*/
-                                        }
-                                        else
-                                        {
-                                            $(".tablinks." + property).removeClass('high').addClass('low');
-                                            /*$(".tablinks." + property).css('color', 'black');*/
-                                        }
-                                    }
+    
+    //If two training trials have been completed, the experimental trials will begin.
+    if(claim_nr == 1)
+   {
+       alert('That were the training trials. The real experiment starts now.');
+       phase = 'experiment';
+       currCondition = conditions[conditionCount];
+       for (var property in currCondition)
+       {
+           if(currCondition.hasOwnProperty(property))
+           {
+                if (currCondition[property] == 'high')
+                {
+                    $(".tablinks." + property).removeClass('low').addClass('high');
+                    $(".tablinks." + property).css("text-decoration", "underline");
+                }
+                else
+                {
+                    $(".tablinks." + property).removeClass('high').addClass('low');
+                    $(".tablinks." + property).css("text-decoration", "");
+                }
+           }
 
-                                }
-/*                            var order = ['high', 'high', 'low', 'low'];
-                            $.each(order,function(index,value){ß
-                               $('.tab').append($('.'+value));
-                            });*/
-                        }
-        newTrial();
-    
-    
+       }
+       newTrial();
+   }
+    //A break after every five trials.
+   else if( (claim_nr % 10) == 0 & (claim_nr != 0))
+   {
+       $('#experiment').hide();
+       $('#break').show();
+   }
+else {newTrial();}
 }
+    
+    function takeBreak(){
+        $('#experiment').hide();
+        $('#experiment').show();
+        if($(this).hasClass("condition"))
+        {
+            if(this.id == "A"){conditionCount = 0;}
+            if(this.id == "B"){conditionCount = 1;}
+            if(this.id == "C"){conditionCount = 2;}
+            if(this.id == "D"){conditionCount = 3;}
+            user = document.getElementById('part_id').value;
+            startTrial = Math.floor(Date.now());
+            startVisit = Math.floor(Date.now()); 
+            startKey = Math.floor(Date.now());
+
+        }
+        
+        
+    }
 
 //Converts JSON object to CSV file.
 function ConvertToCSV(objArray) {
@@ -596,10 +637,12 @@ function ConvertToCSV(objArray) {
                 trial_nr += 2;
                 claim_nr += 1;
             
+
                 //Execute as long as trial_nr hasn't reached the final trial.
-                if(trial_nr < nr_trials)
+                if(claim_nr < nr_trials)
                 {
-                    claim = claimData[trial_nr];
+
+                    claim = claimData[claim_nr];
                     startTrial = Math.floor(Date.now());
                     startVisit = Math.floor(Date.now()); 
                     startKey = Math.floor(Date.now());
